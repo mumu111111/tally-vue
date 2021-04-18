@@ -17,12 +17,7 @@
         <input type="text" />
       </label>
     </div>
-    <div class="type">
-      <ul class="types">
-        <li class="selected">收入</li>
-        <li>支出</li>
-      </ul>
-    </div>
+    <Types />
     <div class="numberPad">
       <div class="output">100</div>
       <div class="buttons">
@@ -46,8 +41,10 @@
 </template>
 
 <script lang="ts">
+import Types from "../components/Money/Types.vue";
 export default {
   name: "Money",
+  components: { Types },
 };
 </script>
 
@@ -108,32 +105,6 @@ export default {
       &:nth-child(12) {
         background: darken($bg, 4 * 6%);
       }
-    }
-  }
-}
-
-.types {
-  background: #c4c4c4;
-  display: flex;
-  text-align: center;
-  font-size: 24px;
-
-  > li {
-    flex-grow: 1;
-    height: 64px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    flex-direction: column;
-    &.selected::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      height: 4px;
-      width: 100%;
-      background: #333;
     }
   }
 }
