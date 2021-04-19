@@ -65,6 +65,7 @@ export default class NumberPad extends Vue {
     console.log("3333333333332");
     this.$emit("update:value", this.output);
     this.$emit("submit", this.output);
+    this.output = "0"; //清空之前 保存 的数据
   }
 }
 </script>
