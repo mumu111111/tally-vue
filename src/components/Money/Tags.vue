@@ -39,11 +39,12 @@ export default class Tags extends Vue {
     } else {
       this.selectedTags = [tag];
     }
+    this.$emit("update:value", this.selectedTags);
   }
   // 添加新标签
   create() {
     const name = window.prompt("请输入标签名");
-    if (name == "") {
+    if (name === "") {
       window.alert("标签名不能为空");
     } else if (this.dataSource) {
       // sync 子传父数据
