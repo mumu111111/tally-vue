@@ -11,12 +11,7 @@
         <button>新增标签</button>
       </div>
     </div>
-    <div>
-      <label class="notes">
-        <span class="name">备注</span>
-        <input type="text" />
-      </label>
-    </div>
+    <Notes />
     <Types />
     <div class="numberPad">
       <div class="output">100</div>
@@ -40,11 +35,13 @@
   </layout>
 </template>
 
-<script lang="ts">
-import Types from "../components/Money/Types.vue";
+<script>
+import Types from "@/components/Money/Types.vue";
+import Notes from "@/components/Money/Notes.vue";
+
 export default {
   name: "Money",
-  components: { Types },
+  components: { Types, Notes },
 };
 </script>
 
