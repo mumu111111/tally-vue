@@ -19,9 +19,9 @@ import Notes from "@/components/Money/Notes.vue";
 import Tags from "@/components/Money/Tags.vue";
 import NumberPad from "@/components/Money/NumberPad.vue";
 import { Component, Watch } from "vue-property-decorator";
-import { model } from "@/model";
+import { recordListModel } from "@/models/recordListModel";
 
-const recordList = model.fetch();
+const recordList = recordListModel.fetch();
 @Component({
   components: { Types, Notes, Tags, NumberPad },
 })
@@ -42,14 +42,14 @@ export default class Money extends Vue {
     this.record.amount = parseFloat(value);
   }
   saveRecord() {
-    const record2 = model.clone(this.record);
+    const record2 = recordListModel.clone(this.record);
     record2.createdAt = new Date(); // 加入时间
     this.recordList.push(record2);
   }
   // 监听 当变化时 存入localS
   @Watch("recordList")
   onRecordListChange() {
-    model.save(this.recordList);
+    recordListModel.save(this.recordList);
   }
 }
 </script>
