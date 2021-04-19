@@ -1,16 +1,6 @@
 <template>
   <layout>
-    <div class="tags">
-      <ul class="current">
-        <li>衣</li>
-        <li>食</li>
-        <li>住</li>
-        <li>行</li>
-      </ul>
-      <div class="new">
-        <button>新增标签</button>
-      </div>
-    </div>
+    <Tags />
     <Notes />
     <Types />
     <div class="numberPad">
@@ -38,10 +28,10 @@
 <script>
 import Types from "@/components/Money/Types.vue";
 import Notes from "@/components/Money/Notes.vue";
-
+import Tags from "@/components/Money/Tags.vue";
 export default {
   name: "Money",
-  components: { Types, Notes },
+  components: { Types, Notes, Tags },
 };
 </script>
 
@@ -106,56 +96,5 @@ export default {
   }
 }
 
-.notes {
-  font-size: 14px;
-  padding-left: 16px;
-  background: #f5f5f5;
-  display: flex;
-  align-items: center;
 
-  > .name {
-    padding-right: 16px;
-  }
-
-  > input {
-    padding: 20px 0;
-    flex-grow: 1;
-    background: transparent;
-    border: none;
-  }
-}
-
-.tags {
-  font-size: 14px;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column-reverse;
-  > .current {
-    display: flex;
-    flex-wrap: wrap;
-    /*justify-content: center;*/
-    > li {
-      margin-top: 4px;
-      $h: 24px;
-      background: #d9d9d9;
-      height: $h;
-      line-height: $h;
-      border-radius: ($h/2);
-      padding: 0 16px;
-      margin-right: 12px;
-    }
-  }
-
-  > .new {
-    padding: 16px;
-
-    button {
-      background: transparent;
-      border: none;
-      color: #999;
-      border-bottom: 1px solid;
-      padding: 0 3px;
-    }
-  }
-}
 </style>
