@@ -29,10 +29,15 @@ export default class Tags extends Vue {
   // 点击选中取消
   toggle(tag: string) {
     const index = this.selectedTags.indexOf(tag);
+    // if (index >= 0) {
+    //   this.selectedTags.splice(index, 1);
+    // } else {
+    //   this.selectedTags.push(tag);
+    // }
     if (index >= 0) {
-      this.selectedTags.splice(index, 1);
+      this.selectedTags = this.selectedTags.filter((item) => item !== tag);
     } else {
-      this.selectedTags.push(tag);
+      this.selectedTags = [tag];
     }
   }
   // 添加新标签
