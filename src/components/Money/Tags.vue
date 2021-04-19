@@ -11,7 +11,7 @@
       </li>
     </ul>
     <div class="new">
-      <button>新增标签</button>
+      <button @click="create">新增标签</button>
     </div>
   </div>
 </template>
@@ -26,12 +26,23 @@ export default class Tags extends Vue {
   @Prop() dataSource: string[] | undefined;
   // 被选中的tags
   selectedTags: string[] = [];
+  // 点击选中取消
   toggle(tag: string) {
     const index = this.selectedTags.indexOf(tag);
     if (index >= 0) {
       this.selectedTags.splice(index, 1);
     } else {
       this.selectedTags.push(tag);
+    }
+  }
+  // 添加新标签
+  create() {
+    const name = window.prompt("请输入标签名");
+    if (name == "") {
+      window.alert("标签名不能为空");
+    } else if (this.dataSource) {
+      // sync 子传父数据
+      this.$emit("update:dataSource", [...this.dataSource, name]);
     }
   }
 }
