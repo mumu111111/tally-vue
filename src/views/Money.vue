@@ -2,7 +2,11 @@
   <layout>
     {{ recordList }}
     <Tags :data-source.sync="tags" @update:value="onUpdateTags" />
-    <Notes :value.sync="record.notes" />
+    <Notes
+      filed-name="备注"
+      placeholder="在这里输入备注"
+      :value.sync="record.notes"
+    />
     <Types :value.sync="record.type" />
     <NumberPad
       :value.sync="record.amount"
