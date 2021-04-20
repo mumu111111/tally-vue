@@ -58,4 +58,3 @@ const medicalTags = [
 ]
 
 export { defaultTags, foodTags, shoppingTags, transportTags, houseTags, entertainmentTags, medicalTags };
-© 2021 GitHub, Inc.
