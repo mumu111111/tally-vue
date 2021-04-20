@@ -14,7 +14,9 @@ import { Component, Watch, Prop } from "vue-property-decorator";
 
 @Component
 export default class Notes extends Vue {
-  value = "";
+  // value = "";
+  // 将私有数据转换成prop
+  @Prop({ default: "" }) value!: string;
   @Prop({ required: true }) filedName!: string;
   @Prop() placeholder?: string;
   @Watch("value")
