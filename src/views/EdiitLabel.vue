@@ -7,7 +7,12 @@
       <span class="rightIcon"></span>
     </div>
     <div class="form-wrapper">
-      <Notes filed-name="备注" :value="tag.name" placeholder="请在这输入备注" />
+      <Notes
+        filed-name="备注"
+        :value="tag.name"
+        @update:value="update"
+        placeholder="请在这输入备注"
+      />
     </div>
     <div class="button-wrapper">
       <Button>删除标签</Button>
@@ -39,6 +44,11 @@ export default class EditLabel extends Vue {
       this.tag = tag;
     } else {
       this.$router.replace("/404");
+    }
+  }
+  update(name: string) {
+    if (this.tag) {
+      tagListModel.update(this.tag.id, name);
     }
   }
 }
