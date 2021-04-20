@@ -6,6 +6,8 @@ import Labels from '@/views/Labels.vue';
 import Statistics from '@/views/Statistics.vue';
 import NotFound from '@/views/NotFound.vue';
 import EdiitLabel from '@/views/EdiitLabel.vue';
+import Bill from '@/views/Bill.vue';
+
 
 Vue.use(VueRouter)
 
@@ -13,6 +15,10 @@ const routes: Array<RouteConfig> = [
   {
     path: '/',
     redirect: '/money'
+  },
+  {
+    path: '/bill',
+    component: Bill
   },
   {
     path: '/money',
