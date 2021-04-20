@@ -7,7 +7,7 @@
       <span class="rightIcon"></span>
     </div>
     <div class="form-wrapper">
-      <Notes filed-name="备注" placeholder="请在这输入备注" />
+      <Notes filed-name="备注" :value="tag.name" placeholder="请在这输入备注" />
     </div>
     <div class="button-wrapper">
       <Button>删除标签</Button>
@@ -20,12 +20,13 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { tagListModel } from "@/models/tagListModel";
 import Notes from "@/components/Money/Notes.vue";
-import Buttton from "@/components/Button.vue";
+import Button from "@/components/Button.vue";
 
 @Component({
-  components: { Notes, Buttton },
+  components: { Notes, Button },
 })
 export default class EditLabel extends Vue {
+  tag?: { id: string; name: string } = undefined;
   created() {
     // 获取router id
     const id = this.$route.params.id;
@@ -35,6 +36,7 @@ export default class EditLabel extends Vue {
     const tag = tags.filter((t) => (t.id = id))[0];
     if (tag) {
       console.log(tag);
+      this.tag = tag;
     } else {
       this.$router.replace("/404");
     }

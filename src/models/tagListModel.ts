@@ -17,7 +17,7 @@ const tagListModel: TagListModel = {
     data: [],
     // 获取locaS数据
     fetch() {
-        this.data = JSON.parse(window.localStorage.getItem(localStorageKeyName) || '[]')
+        this.data = JSON.parse(window.localStorage.getItem(localStorageKeyName) || '[{ "id": "衣", "name": "衣" }]')
         return this.data
     },
     // 新增标签是否重复 不重复 存入locals

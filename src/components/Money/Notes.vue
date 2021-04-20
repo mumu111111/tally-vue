@@ -1,9 +1,13 @@
 <template>
   <div>
-    {{ value }}
     <label class="notes">
       <span class="name">{{ this.filedName }}</span>
-      <input type="text" v-model="value" :placeholder="this.placeholder" />
+      <input
+        type="text"
+        :value="value"
+        @input="onValueChanged($event.target.value)"
+        :placeholder="this.placeholder"
+      />
     </label>
   </div>
 </template>
