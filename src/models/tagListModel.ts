@@ -10,7 +10,7 @@ type TagListModel = {
     fetch: () => Tag[],
     create: (name: string) => 'success' | 'duplicated', // 联合类型 取值可以为多种类型中的一种
     update: (id: string, name: string) => 'success' | 'not found' | 'duplicated',
-
+    remove: (id: string) => boolean,
     save: () => void
 }
 // 具体方法  
@@ -51,6 +51,19 @@ const tagListModel: TagListModel = {
         } else {
             return 'not found'
         }
+    },
+    // 删除
+    remove(id: string) {
+        let index = -1
+        for (let i = 0; this.data.length; i++) {
+            if (this.data[i].id == id) {
+                index = i
+                break;
+            }
+        }
+        this.data.splice(index, 1)
+        this.save()
+        return true;
     },
     //存入locals
     save() {

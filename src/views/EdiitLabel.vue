@@ -2,7 +2,7 @@
   <Layout>
     编e辑页面
     <div class="navBar">
-      <!-- <Icon class="leftIcon" name="left"/> -->
+      <!-- <Icon class="leftIcon" name="left" @click="goBack"/> -->
       <span class="title">编辑标签</span>
       <span class="rightIcon"></span>
     </div>
@@ -15,7 +15,7 @@
       />
     </div>
     <div class="button-wrapper">
-      <Button>删除标签</Button>
+      <Button @click="remove">删除标签</Button>
     </div>
   </Layout>
 </template>
@@ -32,8 +32,8 @@ import Button from "@/components/Button.vue";
 })
 export default class EditLabel extends Vue {
   tag?: { id: string; name: string } = undefined;
+  // 初始操作 获取router 判断当前的id是否存在
   created() {
-    // 获取router id
     const id = this.$route.params.id;
     tagListModel.fetch(); //获取data
     // 判断tag 是否存在
@@ -46,10 +46,23 @@ export default class EditLabel extends Vue {
       this.$router.replace("/404");
     }
   }
+  // 修改tag
   update(name: string) {
     if (this.tag) {
       tagListModel.update(this.tag.id, name);
     }
+  }
+  // 删除
+  remove() {
+    if (this.tag) {
+      if (tagListModel.remove(this.tag.id)) {
+        this.goBack();
+      }
+    }
+  }
+  // 回退页面
+  goBack() {
+    this.$router.back();
   }
 }
 </script>
