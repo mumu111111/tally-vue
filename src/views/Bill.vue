@@ -5,12 +5,23 @@
         <img :src="logo" alt="可乐记账" />
       </div>
       <div class="info">
-        <div class="calendar">
+        <!-- <div class="calendar">
           <div class="label">{{ year }}年</div>
           <div class="value">
             <span>{{ month }}</span
             >月
           </div>
+        </div> -->
+        <select v-model="year" class="year">
+          <option v-for="y in years" :key="y" :value="y">{{ y }}年</option>
+        </select>
+        <div class="month">
+          <select v-model="month">
+            <option v-for="m in 12" :key="m" :value="m">
+              {{ beautifyMonth(m) }}
+            </option>
+          </select>
+          <span>月</span>
         </div>
         <div class="total">
           <div>
@@ -73,9 +84,19 @@ export default class Bill extends Vue {
   // logo: string = logo;
   // 处理时间
   //   当前月份
-  month = dayjs().month();
-  year = dayjs().year();
+  month = (dayjs().month() + 1).toString();
+  year = dayjs().year().toString();
 
+  get years() {
+    const endYear = dayjs().year();
+    let y = 1970;
+    const result: number[] = [];
+    while (y <= endYear) {
+      result.push(y);
+      y++;
+    }
+    return result;
+  }
   //   localS或者store 中获取数据
   get recordList() {
     return this.$store.state.recordList;
@@ -86,13 +107,19 @@ export default class Bill extends Vue {
     // 当前月对应的数据 之中的 total
     return total;
   }
-
+  beautifyMonth(m: number) {
+    return m < 10 ? "0" + m.toString() : m.toString();
+  }
   get list() {
     const results: Group[] = [];
     const names: string[] = [];
     // 获取当月的收入支出消费并且排序
     const list = clone<RecordItem[]>(this.recordList)
-      .filter((item) => dayjs(item.createdAt).month() === this.month)
+      .filter(
+        (item) =>
+          dayjs(item.createdAt).year() === parseInt(this.year) &&
+          dayjs(item.createdAt).month() + 1 === parseInt(this.month)
+      )
       .sort((b, a) => {
         return dayjs(a.createdAt).valueOf() - dayjs(b.createdAt).valueOf();
       });
@@ -200,7 +227,7 @@ export default class Bill extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" scoped >
 .header {
   background: #ffda47;
   .logo {
@@ -222,15 +249,30 @@ export default class Bill extends Vue {
     }
     .value {
       span {
-        font-size: 18px;
+        font-size: 20px;
       }
       font-size: 12px;
     }
     .calendar {
       position: relative;
-      padding: 4px 16px;
+      padding: 0 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      .year {
+        font-size: 12px;
+        color: #a38932;
+        padding: 0 3px;
+        margin-bottom: 5px;
+      }
       .month {
-        font-size: 24px;
+        font-size: 12px;
+        padding: 0 3px;
+        display: flex;
+        align-items: center;
+        select {
+          font-size: 20px;
+        }
       }
       &::after {
         content: "";
@@ -262,22 +304,27 @@ export default class Bill extends Vue {
       padding: 4px 16px;
       border-bottom: 1px solid #dddddd;
     }
-    .item {
+    .items {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      flex-direction: column;
       padding: 12px 16px;
-      box-shadow: inset 0 -0.5px 0.5px -0.5px rgba(0, 0, 0, 0.2);
-      .tag {
+      .item {
         display: flex;
+        justify-content: space-between;
         align-items: center;
-        .icon {
-          background: #f5f5f5;
-          width: 30px;
-          height: 30px;
-          padding: 4px;
-          border-radius: 50%;
-          margin-right: 16px;
+        padding: 8px 0;
+        box-shadow: inset 0 -0.5px 0.5px -0.5px rgba(0, 0, 0, 0.2);
+        .tag {
+          display: flex;
+          align-items: center;
+          .icon {
+            background: #f5f5f5;
+            width: 30px;
+            height: 30px;
+            padding: 4px;
+            border-radius: 50%;
+            margin-right: 16px;
+          }
         }
       }
     }
