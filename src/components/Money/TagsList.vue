@@ -6,7 +6,7 @@
       </div>
       <span>{{ tag.value }}</span>
     </li>
-    <li>
+    <li v-if="disabled">
       <div class="icon" @click="add"><!-- <Icon name="add"/> -->添加</div>
       <span>添加</span>
     </li>
@@ -23,6 +23,8 @@ import Icon from "@/components/Icon.vue";
 export default class TagList extends Vue {
   @Prop({ required: true, type: Object }) selectedTag!: TagItem;
   @Prop({ required: true, type: Array }) tagList!: TagItem[];
+  @Prop({ type: Boolean, default: false }) disabled!: boolean;
+
   //   get tagList(): TagItem[] {
   //     return this.$store.state.tagList;
   //   }
@@ -30,7 +32,7 @@ export default class TagList extends Vue {
     this.$emit("update:selectedTag", tag);
   }
   add() {
-    this.$router.replace("/tags");
+    this.$router.replace("/outlabel");
   }
 }
 </script>

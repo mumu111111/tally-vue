@@ -7,6 +7,7 @@
       :selected-tag.sync="record.tags"
       :tag-list.sync="tagList"
       class="tag-list"
+      :disabled="true"
     />
     <Notes
       filed-name="备注"
@@ -34,7 +35,7 @@ import { tagListModel } from "@/models/tagListModel";
 import TagList from "@/components/Money/TagsList.vue";
 import clone from "@/lib/clone";
 
-const recordList = recordListModel.fetch();
+// const recordList = recordListModel.fetch();
 // const tagList = tagListModel.fetch();
 @Component({
   components: { Types, Notes, Tags, NumberPad, TagList },

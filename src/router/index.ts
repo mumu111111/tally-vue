@@ -7,7 +7,7 @@ import Statistics from '@/views/Statistics.vue';
 import NotFound from '@/views/NotFound.vue';
 import EdiitLabel from '@/views/EdiitLabel.vue';
 import Bill from '@/views/Bill.vue';
-import Tags from '@/views/Tags.vue';
+import OutLabel from '@/views/OutLabel.vue';
 
 
 
@@ -39,8 +39,8 @@ const routes: Array<RouteConfig> = [
     component: Statistics
   },
   {
-    path: '/tags',
-    component: Tags
+    path: '/outlabel',
+    component: OutLabel
   },
   {
     path: '*',
