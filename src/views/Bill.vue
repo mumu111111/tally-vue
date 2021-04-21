@@ -2,39 +2,51 @@
   <Layout>
     <header class="header">
       <div class="logo">
-        <img :src="logo" alt="咸鱼记账" />
+        <img :src="logo" alt="可乐记账" />
       </div>
       <div class="info">
         <div class="calendar">
-          <div class="label">2020年</div>
-          <div class="value"><span>02</span>月</div>
+          <div class="label">{{ year }}年</div>
+          <div class="value">
+            <span>{{ month }}</span
+            >月
+          </div>
         </div>
         <div class="total">
           <div>
             <div class="label">收入</div>
-            <div class="value"><span>0</span>.00</div>
+            <div class="value">
+              <span>{{ this.totalIncome.toString().split(".")[0] || 0 }}</span
+              >.{{ this.totalIncome.toString().split(".")[1] || "00" }}
+            </div>
           </div>
           <div>
             <div class="label">支出</div>
-            <div class="value"><span>0</span>.00</div>
+            <div class="value">
+              <span>{{ this.totalExpense.toString().split(".")[0] || 0 }}</span
+              >.{{ this.totalExpense.toString().split(".")[1] || "00" }}
+            </div>
           </div>
           <div></div>
         </div>
       </div>
     </header>
     <ul class="record">
-      <li>
+      <li v-for="(group, index) in list" :key="index">
         <div class="title">
-          <span>02月28日 星期五</span>
-          <span>支出: 9</span>
+          <span>{{ getTitle(group) }}</span>
+          <span>{{ getTotal(group) }}</span>
         </div>
-        <div class="item">
-          <div class="tag">
-            <Icon name="food" class="icon" />
-            <span>餐饮</span>
-          </div>
-          <span>-9</span>
-        </div>
+
+        <ul class="items">
+          <li class="item" v-for="(item, index) in group.items" :key="index">
+            <div class="tag">
+              <Icon :name="item.tags.name" class="icon" />
+              <span>{{ item.tags.value }}</span>
+            </div>
+            <span>{{ getAmount(item) }}</span>
+          </li>
+        </ul>
       </li>
     </ul>
   </Layout>
@@ -46,11 +58,145 @@ import { Component } from "vue-property-decorator";
 import Layout from "@/components/Layout.vue";
 // import logo from '@/assets/logo.png';
 import Icon from "@/components/Icon.vue";
+import dayjs from "dayjs";
+import clone from "@/lib/clone";
+
+type Group = {
+  name: string;
+  items: RecordItem[];
+};
+
 @Component({
   components: { Icon, Layout },
 })
 export default class Bill extends Vue {
   // logo: string = logo;
+  // 处理时间
+  //   当前月份
+  month = dayjs().month();
+  year = dayjs().year();
+
+  //   localS或者store 中获取数据
+  get recordList() {
+    return this.$store.state.recordList;
+  }
+  //  当前月份的总支出和收入
+  get xx() {
+    let total = 0;
+    // 当前月对应的数据 之中的 total
+    return total;
+  }
+
+  get list() {
+    const results: Group[] = [];
+    const names: string[] = [];
+    // 获取当月的收入支出消费并且排序
+    const list = clone<RecordItem[]>(this.recordList)
+      .filter((item) => dayjs(item.createdAt).month() === this.month)
+      .sort((b, a) => {
+        return dayjs(a.createdAt).valueOf() - dayjs(b.createdAt).valueOf();
+      });
+    //  细分 对同一天的记录合并
+    let record: RecordItem;
+    for (record of list) {
+      const date = dayjs(record.createdAt).toISOString().split("T")[0]; // 获取时间2021-2-2
+      const index = names.indexOf(date);
+      if (index < 0) {
+        names.push(date);
+        results.push({ name: date, items: [record] });
+      } else {
+        // 同一天的多条记录
+        results[index].items.push(record);
+      }
+    }
+    console.log("list", results);
+    return results;
+  }
+  // 显示时间 eg昨天 星期
+  getTitle(group: Group) {
+    const day = dayjs(group.name);
+    const now = dayjs();
+    if (day.isSame(now, "day")) {
+      return `今天 ${this.toWeekday(day.day())}`;
+    } else if (day.isSame(now.subtract(1, "day"), "day")) {
+      return `昨天 ${this.toWeekday(day.day())}`;
+    } else if (day.isSame(now.subtract(2, "day"), "day")) {
+      return `前天 ${this.toWeekday(day.day())}`;
+    } else {
+      return `${day.format("M月d日")} ${this.toWeekday(day.day())}`;
+    }
+  }
+  // 总收入或支出金额
+  getTotal(group: Group) {
+    let total = 0;
+    let item: RecordItem;
+    for (item of group.items) {
+      if (item.type === "-") {
+        total -= item.amount;
+      } else if (item.type === "+") {
+        total += item.amount;
+      }
+    }
+    if (total <= 0) {
+      return `支出: ¥${Math.abs(total)}`;
+    } else {
+      return `收入: ¥${Math.abs(total)}`;
+    }
+  }
+  //   支出加-   收入正常显示
+  getAmount(record: RecordItem) {
+    if (record.type === "+") {
+      return record.amount;
+    } else {
+      return -record.amount;
+    }
+  }
+  // 收入综合
+  get totalIncome() {
+    let total = 0;
+    let group: Group;
+    for (group of this.list) {
+      let record: RecordItem;
+      for (record of group.items) {
+        if (record.type === "+") {
+          total += record.amount;
+        } else {
+          continue;
+        }
+      }
+    }
+    return total;
+  }
+  // 支出综合
+  get totalExpense() {
+    let total = 0;
+    let group: Group;
+    for (group of this.list) {
+      let record: RecordItem;
+      for (record of group.items) {
+        if (record.type === "-") {
+          total += record.amount;
+        } else {
+          continue;
+        }
+      }
+    }
+    return total;
+  }
+  //   日期对应的星期几
+  toWeekday(value: number) {
+    if (value >= 0 && value <= 6) {
+      return [
+        "星期天",
+        "星期一",
+        "星期二",
+        "星期三",
+        "星期四",
+        "星期五",
+        "星期六",
+      ][value];
+    }
+  }
 }
 </script>
 
