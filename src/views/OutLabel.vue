@@ -8,12 +8,12 @@
   <Layout class="tags">
     <header class="header">
       <div class="title">
-        <button class="back">
+        <button class="back" @click="back">
           <Icon name="left" />
         </button>
         <span>添加支出类别</span>
       </div>
-      <button class="ok">完成</button>
+      <button class="ok" @click="ok">完成</button>
     </header>
     <div class="current">
       <div class="label">
@@ -89,6 +89,7 @@ import {
   transportTags,
 } from "@/constants/defaultTags";
 import Icon from "@/components/Icon.vue";
+import clone from "@/lib/clone";
 @Component({
   components: { Icon, TagList, Layout },
 })
@@ -100,9 +101,22 @@ export default class OutLabel extends Vue {
   houseTags = houseTags;
   entertainmentTags = entertainmentTags;
   medicalTags = medicalTags;
+  back() {
+    this.$router.back();
+  }
+  ok() {
+    // 触发store 将tag 加入到list 和localS
+    this.$store.commit("insertTag", clone(this.tag));
+    if (this.$store.state.tagListError == "duplicate") {
+      window.alert("标签已经添加过了");
+    } else {
+      this.$router.replace("/money");
+    }
+  }
+
   @Watch("tag", { deep: true })
   onTagChange(val: TagItem) {
-    console.log("监听内部变化");
+    // console.log("监听内部变化");
     console.log(val.name);
     console.log(val.value);
   }
