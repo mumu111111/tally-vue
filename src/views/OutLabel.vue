@@ -102,7 +102,7 @@ export default class OutLabel extends Vue {
   entertainmentTags = entertainmentTags;
   medicalTags = medicalTags;
   back() {
-    this.$router.back();
+    this.$router.replace("/money");
   }
   ok() {
     // 触发store 将tag 加入到list 和localS
@@ -183,6 +183,8 @@ export default class OutLabel extends Vue {
   .ok {
     font-size: 16px;
     color: red;
+    border: none;
+    background: inherit;
   }
 }
 .current {
