@@ -7,6 +7,8 @@ import Statistics from '@/views/Statistics.vue';
 import NotFound from '@/views/NotFound.vue';
 import EdiitLabel from '@/views/EdiitLabel.vue';
 import Bill from '@/views/Bill.vue';
+import Tags from '@/views/Tags.vue';
+
 
 
 Vue.use(VueRouter)
@@ -36,7 +38,10 @@ const routes: Array<RouteConfig> = [
     path: '/statistics',
     component: Statistics
   },
-
+  {
+    path: '/tags',
+    component: Tags
+  },
   {
     path: '*',
     component: NotFound

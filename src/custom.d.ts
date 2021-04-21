@@ -4,7 +4,7 @@ type TagItem = {
 }
 
 type RecordItem = {
-    tags: string[]
+    tags: TagItem
     notes: string
     type: string
     amount: number

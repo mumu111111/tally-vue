@@ -1,11 +1,10 @@
 <template>
   <layout>
-    {{ record }}
-    <!-- <Tags :data-source.sync="tags" @update:value="onUpdateTags" /> -->
+    {{ recordList }}
+    <Tags :data-source.sync="tags" @update:value="onUpdateTags" />
     <TagList
       class-prefix="money"
       :selected-tag.sync="record.tags"
-      :tag-list.sync="tagList"
       class="tag-list"
     />
     <Notes
@@ -32,34 +31,23 @@ import { Component, Watch } from "vue-property-decorator";
 import { recordListModel } from "@/models/recordListModel";
 import { tagListModel } from "@/models/tagListModel";
 import TagList from "@/components/Money/TagsList.vue";
-import clone from "@/lib/clone";
 
 const recordList = recordListModel.fetch();
-// const tagList = tagListModel.fetch();
+const tagList = tagListModel.fetch();
 @Component({
   components: { Types, Notes, Tags, NumberPad, TagList },
 })
 export default class Money extends Vue {
-  // record 初始化数据 默认选中餐饮
-  record: RecordItem = this.initRecord();
-  // store获取标签列表
-  get tagList(): TagItem {
-    console.log(this.$store.state.tagList);
+  // tags = ["衣", "食", "住", "行"];
+  record: RecordItem = {
+    tags: { name: "food", value: "餐饮" },
+    type: "-",
+    notes: "",
+    amount: 0,
+  };
 
-    return this.$store.state.tagList;
-  }
-  initRecord(): RecordItem {
-    return {
-      tags: { name: "food", value: "餐饮" },
-      type: "-",
-      notes: "",
-      amount: 0,
-      // createdAt: new Date(),
-    };
-  }
-
-  // tags = tagList;
-  // recordList: RecordItem[] = recordList;
+  tags = tagList;
+  recordList: RecordItem[] = recordList;
 
   onUpdateTags(value: string[]) {
     // this.record.tags = value;
@@ -67,20 +55,15 @@ export default class Money extends Vue {
   onUpdateAmount(value: string) {
     this.record.amount = parseFloat(value);
   }
-  // 保存
   saveRecord() {
-    this.$store.commit("insertRecord", clone<RecordItem>(this.record));
-    this.record = this.initRecord();
-    this.$router.replace("/bill");
-    // const record2 = recordListModel.clone(this.record);
-    // record2.createdAt = new Date(); // 加入时间
-    // this.recordList.push(record2);
+    const record2 = recordListModel.clone(this.record);
+    record2.createdAt = new Date(); // 加入时间
+    this.recordList.push(record2);
   }
   // 监听 当变化时 存入localS
-  @Watch("record")
+  @Watch("recordList")
   onRecordListChange() {
-    this.saveRecord();
-    // recordListModel.save(this.recordList);
+    recordListModel.save(this.recordList);
   }
 }
 </script>
