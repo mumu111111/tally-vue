@@ -2,19 +2,28 @@
   <layout>
     {{ record }}
     <!-- <Tags :data-source.sync="tags" @update:value="onUpdateTags" /> -->
+    <Types :value.sync="record.type" />
+
     <TagList
+      v-if="record.type == '-'"
       class-prefix="money"
       :selected-tag.sync="record.tags"
       :tag-list.sync="tagList"
       class="tag-list"
       :disabled="true"
     />
+    <TagList
+      v-else-if="record.type === '+'"
+      class-prefix="money"
+      :selected-tag.sync="record.tags"
+      :tag-list.sync="defaultIncomeTags"
+      class="tag-list"
+    />
     <Notes
       filed-name="备注"
       placeholder="在这里输入备注"
       :value.sync="record.notes"
     />
-    <Types :value.sync="record.type" />
     <NumberPad
       :value.sync="record.amount"
       @update:value="onUpdateAmount"
@@ -34,7 +43,7 @@ import { recordListModel } from "@/models/recordListModel";
 import { tagListModel } from "@/models/tagListModel";
 import TagList from "@/components/Money/TagsList.vue";
 import clone from "@/lib/clone";
-
+import { defaultIncomeTags } from "@/constants/defaultTags";
 // const recordList = recordListModel.fetch();
 // const tagList = tagListModel.fetch();
 @Component({
@@ -49,6 +58,9 @@ export default class Money extends Vue {
 
     return this.$store.state.tagList;
   }
+  // get incomeList() {
+  //   return;
+  // }
   initRecord(): RecordItem {
     return {
       tags: { name: "food", value: "餐饮" },

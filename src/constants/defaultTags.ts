@@ -56,5 +56,11 @@ const medicalTags = [
     { name: 'drug', value: '药品费' },
     { name: 'surgery', value: '手术费' }
 ]
+const defaultIncomeTags = [
+    { name: 'wages', value: '工资' },
+    { name: 'bonus', value: '奖金' },
+    { name: 'adjunct', value: '兼职' },
+    { name: 'expense', value: '报销' }
+]
 
-export { defaultTags, foodTags, shoppingTags, transportTags, houseTags, entertainmentTags, medicalTags };
+export { defaultTags, foodTags, shoppingTags, transportTags, houseTags, entertainmentTags, medicalTags, defaultIncomeTags };
