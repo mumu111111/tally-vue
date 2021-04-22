@@ -33,7 +33,7 @@ export default class NumberPad extends Vue {
     const Button = event.target as HTMLButtonElement;
     const input = Button.textContent!;
     if (Button === null) return; // 加判断这句 否则报错
-    if (this.output.length === 16) {
+    if (this.output.length === 6) {
       return;
     }
     if (this.output === "0") {
@@ -57,10 +57,12 @@ export default class NumberPad extends Vue {
     } else {
       this.output = this.output.slice(0, -1);
     }
+    this.$emit("update:value", this.output);
   }
 
   clear() {
     this.output = "0";
+    this.$emit("update:value", this.output);
   }
 
   ok() {
@@ -79,11 +81,12 @@ export default class NumberPad extends Vue {
   > .output {
     @extend %clearFix;
     @extend %innerShader;
-    font-size: 36px;
+    background: #f5f5f5;
+    padding: 6px 12px;
+    font-size: 24px;
+    line-height: 24px;
     font-family: Consolas, monospace;
-    padding: 9px 16px;
     text-align: right;
-    height: 72px;
   }
 
   > .buttons {
@@ -95,7 +98,7 @@ export default class NumberPad extends Vue {
       height: 64px;
       background: transparent;
       border: none;
-
+      font-size: 16px;
       &.ok {
         float: right;
         height: 64 * 2px;

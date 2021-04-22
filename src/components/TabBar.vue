@@ -31,6 +31,7 @@ export default class TabBar extends Vue {
 
 <style lang="scss" scoped>
 .tab-bar {
+  background: #44c67e;
   display: flex;
   justify-content: center;
   align-items: center;

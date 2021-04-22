@@ -5,24 +5,20 @@
         <img :src="logo" alt="可乐记账" />
       </div>
       <div class="info">
-        <!-- <div class="calendar">
-          <div class="label">{{ year }}年</div>
-          <div class="value">
-            <span>{{ month }}</span
-            >月
-          </div>
-        </div> -->
-        <select v-model="year" class="year">
-          <option v-for="y in years" :key="y" :value="y">{{ y }}年</option>
-        </select>
-        <div class="month">
-          <select v-model="month">
-            <option v-for="m in 12" :key="m" :value="m">
-              {{ beautifyMonth(m) }}
-            </option>
+        <div class="time">
+          <select v-model="year" class="year">
+            <option v-for="y in years" :key="y" :value="y">{{ y }}年</option>
           </select>
-          <span>月</span>
+          <div class="month">
+            <select v-model="month">
+              <option v-for="m in 12" :key="m" :value="m">
+                {{ beautifyMonth(m) }}
+              </option>
+            </select>
+            <span>月</span>
+          </div>
         </div>
+
         <div class="total">
           <div>
             <div class="label">收入</div>
@@ -229,7 +225,8 @@ export default class Bill extends Vue {
 
 <style lang="scss" scoped >
 .header {
-  background: #ffda47;
+  background: #44c67e;
+  text-align: center;
   .logo {
     img {
       height: 30px;
@@ -242,9 +239,40 @@ export default class Bill extends Vue {
     display: flex;
     align-items: center;
     padding: 4px 0;
+    .time {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      padding: 0 10px;
+      .year {
+        font-size: 12px;
+        padding: 0 3px;
+        margin-bottom: 5px;
+      }
+      .month {
+        font-size: 12px;
+        padding: 0 3px;
+        display: flex;
+        align-items: center;
+        select {
+          font-size: 20px;
+        }
+      }
+      ::after {
+        content: "";
+        display: block;
+        width: 1px;
+        height: 24px;
+        background: #333;
+        position: absolute;
+        top: 50%;
+        right: 0;
+        -webkit-transform: translateY(-50%);
+        transform: translateY(-50%);
+      }
+    }
     .label {
       font-size: 12px;
-      color: #a38932;
       margin-bottom: 4px;
     }
     .value {
@@ -259,21 +287,7 @@ export default class Bill extends Vue {
       display: flex;
       flex-direction: column;
       align-items: center;
-      .year {
-        font-size: 12px;
-        color: #a38932;
-        padding: 0 3px;
-        margin-bottom: 5px;
-      }
-      .month {
-        font-size: 12px;
-        padding: 0 3px;
-        display: flex;
-        align-items: center;
-        select {
-          font-size: 20px;
-        }
-      }
+
       &::after {
         content: "";
         display: block;

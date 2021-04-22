@@ -1,41 +1,45 @@
 <template>
-  <layout>
-    <!-- <Tags :data-source.sync="tags" @update:value="onUpdateTags" /> -->
-    <!-- <Types :value.sync="record.type" /> -->
-    <TabBar
-      :bars="[
-        { name: '支出', value: '-' },
-        { name: '收入', value: '+' },
-      ]"
-      :c-bar.sync="record.type"
-    />
+  <div>
+    <div class="top-content">
+      <TabBar
+        :bars="[
+          { name: '支出', value: '-' },
+          { name: '收入', value: '+' },
+        ]"
+        :c-bar.sync="record.type"
+        class="top-bars"
+      />
+      <button class="cancel" @click="cancel">取消</button>
+      <TagList
+        v-if="record.type == '-'"
+        class-prefix="money"
+        :selected-tag.sync="record.tags"
+        :tag-list.sync="tagList"
+        class="tag-list"
+        :disabled="true"
+      />
+      <TagList
+        v-else-if="record.type === '+'"
+        class-prefix="money"
+        :selected-tag.sync="record.tags"
+        :tag-list.sync="incomeTags"
+        class="tag-list"
+      />
+    </div>
 
-    <TagList
-      v-if="record.type == '-'"
-      class-prefix="money"
-      :selected-tag.sync="record.tags"
-      :tag-list.sync="tagList"
-      class="tag-list"
-      :disabled="true"
-    />
-    <TagList
-      v-else-if="record.type === '+'"
-      class-prefix="money"
-      :selected-tag.sync="record.tags"
-      :tag-list.sync="incomeTags"
-      class="tag-list"
-    />
-    <Notes
-      filed-name="备注"
-      placeholder="在这里输入备注"
-      :value.sync="record.notes"
-    />
-    <NumberPad
-      :value.sync="record.amount"
-      @update:value="onUpdateAmount"
-      @submit="saveRecord"
-    />
-  </layout>
+    <div class="calculator">
+      <Notes
+        filed-name="备注"
+        placeholder="在这里输入备注"
+        :value.sync="record.notes"
+      />
+      <NumberPad
+        :value.sync="record.amount"
+        @update:value="onUpdateAmount"
+        @submit="saveRecord"
+      />
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -51,8 +55,6 @@ import TagList from "@/components/Money/TagsList.vue";
 import clone from "@/lib/clone";
 import { defaultIncomeTags } from "@/constants/defaultTags";
 import TabBar from "@/components/TabBar.vue";
-// const recordList = recordListModel.fetch();
-// const tagList = tagListModel.fetch();
 @Component({
   components: { Types, Notes, Tags, NumberPad, TagList, TabBar },
 })
@@ -67,9 +69,6 @@ export default class Money extends Vue {
 
     return this.$store.state.tagList;
   }
-  // get incomeList() {
-  //   return;
-  // }
   initRecord(): RecordItem {
     return {
       tags: { name: "food", value: "餐饮" },
@@ -79,12 +78,8 @@ export default class Money extends Vue {
       // createdAt: new Date(),
     };
   }
-
-  // tags = tagList;
-  // recordList: RecordItem[] = recordList;
-
-  onUpdateTags(value: string[]) {
-    // this.record.tags = value;
+  cancel() {
+    this.$router.back();
   }
   onUpdateAmount(value: string) {
     this.record.amount = parseFloat(value);
@@ -95,7 +90,7 @@ export default class Money extends Vue {
     this.record = this.initRecord();
     this.$router.replace("/bill");
   }
-  //   监听type 支出还是收入对应的 默认选中状态不一样
+  // 监听type 支出还是收入对应的 默认选中状态不一样
   @Watch("record.type")
   onTypeChange(type: string) {
     if (type === "+") {
@@ -109,4 +104,24 @@ export default class Money extends Vue {
 
 <style lang="scss" scoped>
 @import "~@/assets/style/helper.scss";
+.top-content {
+  padding-bottom: 600px;
+  .top-bars {
+    position: relative;
+  }
+  .cancel {
+    position: absolute;
+    top: 5%;
+    right: 0;
+    transform: translateY(-50%);
+    font-size: 14px;
+    padding: 24px 16px 8px 16px;
+  }
+}
+.calculator {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+}
 </style>

@@ -46,7 +46,7 @@ nav {
       height: 24px;
     }
     &.selected {
-      color: #ffda47;
+      color: #127d24;
     }
   }
 }

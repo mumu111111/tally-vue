@@ -30,7 +30,7 @@ export default class Types extends Vue {
 
 <style lang="scss" scoped>
 .types {
-  background: #c4c4c4;
+  background: #44c67e;
   display: flex;
   text-align: center;
   font-size: 24px;

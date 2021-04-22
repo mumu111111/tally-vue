@@ -40,9 +40,7 @@
           <div>{{ item.amount }}</div>
         </li>
       </ul>
-      <div v-else class="reverse">
-        <Blank />
-      </div>
+      <div v-else class="reverse"><Blank />h</div>
     </div>
   </Layout>
 </template>
@@ -326,8 +324,10 @@ export default class Charts extends Vue {
 
 <style lang="scss" scoped>
 .header {
-  background: #ffda47;
+  background: #44c67e;
   padding: 4px 0;
+  text-align: center;
+
   .type {
     font-size: 20px;
     padding: 4px 8px;
@@ -341,6 +341,7 @@ export default class Charts extends Vue {
         font-size: 14px;
         width: 33%;
         border: 1px solid #333333;
+        padding: 4px 16px;
         &:first-child {
           border-radius: 4px 0 0 4px;
         }

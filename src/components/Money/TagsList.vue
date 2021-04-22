@@ -44,6 +44,7 @@ export default class TagList extends Vue {
   flex-wrap: wrap;
   align-content: flex-start;
   overflow: auto;
+
   > li {
     width: 25%;
     padding: 12px 0;
@@ -59,7 +60,7 @@ export default class TagList extends Vue {
       background: #f5f5f5;
       margin-bottom: 4px;
       &.selected {
-        background: #ffda47;
+        background: #44c67e;
       }
       svg {
         width: 40px;

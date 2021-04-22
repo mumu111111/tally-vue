@@ -1,78 +1,77 @@
 <template>
-  <!-- <div>
-    <div>点击添加后跳转 其他支出类别标签页</div>
-    <div>
-      <router-link to="/">返回首页</router-link>
-    </div>
-  </div> -->
-  <Layout class="tags">
-    <header class="header">
-      <div class="title">
-        <button class="back" @click="back">
-          <Icon name="left" />
-        </button>
-        <span>添加支出类别</span>
-      </div>
-      <button class="ok" @click="ok">完成</button>
-    </header>
-    <div class="current">
-      <div class="label">
-        <span>选中标签: </span>
-        <div class="icon">
-          <Icon :name="tag.name" />
+  <div class="tags">
+    <div class="fixed">
+      <header class="header">
+        <div class="title">
+          <button class="back" @click="back">
+            <Icon name="left" />
+          </button>
+          <span>添加支出类别</span>
         </div>
+        <button class="ok" @click="ok">完成</button>
+      </header>
+      <div class="current">
+        <div class="label">
+          <span>选中标签: </span>
+          <div class="icon">
+            <Icon :name="tag.name" />
+          </div>
+        </div>
+        <span>{{ tag.value }}</span>
       </div>
-      <span>{{ tag.value }}</span>
     </div>
-    <div class="food">
-      <div class="kind-name">餐饮</div>
-      <TagList
-        class-prefix="main"
-        :tag-list="foodTags"
-        :selected-tag.sync="tag"
-      />
+    <div class="content">
+      <div class="food">
+        <div class="kind-name">餐饮</div>
+        <TagList
+          class-prefix="main"
+          :tag-list="foodTags"
+          :selected-tag.sync="tag"
+        />
+      </div>
+      <div class="shopping">
+        <div class="kind-name">购物</div>
+        <TagList
+          class-prefix="main"
+          :tag-list="shoppingTags"
+          :selected-tag.sync="tag"
+        />
+      </div>
+      <div class="transport">
+        <div class="kind-name">交通</div>
+        <TagList
+          class-prefix="main"
+          :tag-list="transportTags"
+          :selected-tag.sync="tag"
+        />
+      </div>
+      <div class="house">
+        <div class="kind-name">居住</div>
+        <TagList
+          class-prefix="main"
+          :tag-list="houseTags"
+          :selected-tag.sync="tag"
+        />
+      </div>
+      <div class="entertainment">
+        <div class="kind-name">娱乐</div>
+        <TagList
+          class-prefix="main"
+          :tag-list="entertainmentTags"
+          :selected-tag.sync="tag"
+        />
+      </div>
+      <div class="medical">
+        <div class="kind-name">医疗</div>
+        <TagList
+          class-prefix="main"
+          :tag-list="medicalTags"
+          :selected-tag.sync="tag"
+        />
+      </div>
     </div>
-    <div class="shopping">
-      <div class="kind-name">购物</div>
-      <TagList
-        class-prefix="main"
-        :tag-list="shoppingTags"
-        :selected-tag.sync="tag"
-      />
-    </div>
-    <div class="transport">
-      <div class="kind-name">交通</div>
-      <TagList
-        class-prefix="main"
-        :tag-list="transportTags"
-        :selected-tag.sync="tag"
-      />
-    </div>
-    <div class="house">
-      <div class="kind-name">居住</div>
-      <TagList
-        class-prefix="main"
-        :tag-list="houseTags"
-        :selected-tag.sync="tag"
-      />
-    </div>
-    <div class="entertainment">
-      <div class="kind-name">娱乐</div>
-      <TagList
-        class-prefix="main"
-        :tag-list="entertainmentTags"
-        :selected-tag.sync="tag"
-      />
-    </div>
-    <div class="medical">
-      <div class="kind-name">医疗</div>
-      <TagList
-        class-prefix="main"
-        :tag-list="medicalTags"
-        :selected-tag.sync="tag"
-      />
-    </div>
-  </Layout>
+    {{ houseTags }}
+  </div>
 </template>
 
 <script lang="ts">
@@ -158,8 +157,15 @@ export default class OutLabel extends Vue {
     }
   }
 }
+.fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: white;
+}
 .header {
-  background: #ffda47;
+  background: #44c67e;
   font-size: 20px;
   line-height: 24px;
   padding: 12px 16px;
@@ -213,7 +219,11 @@ export default class OutLabel extends Vue {
     }
   }
 }
+.content {
+  padding-top: 120px;
+}
 .kind-name {
+  text-align: center;
   font-size: 14px;
   color: #999999;
 }
