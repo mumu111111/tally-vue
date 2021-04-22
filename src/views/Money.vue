@@ -2,7 +2,14 @@
   <layout>
     {{ record }}
     <!-- <Tags :data-source.sync="tags" @update:value="onUpdateTags" /> -->
-    <Types :value.sync="record.type" />
+    <!-- <Types :value.sync="record.type" /> -->
+    <TabBar
+      :bars="[
+        { name: '支出', value: '-' },
+        { name: '收入', value: '+' },
+      ]"
+      :c-bar.sync="record.type"
+    />
 
     <TagList
       v-if="record.type == '-'"
@@ -44,10 +51,11 @@ import { tagListModel } from "@/models/tagListModel";
 import TagList from "@/components/Money/TagsList.vue";
 import clone from "@/lib/clone";
 import { defaultIncomeTags } from "@/constants/defaultTags";
+import TabBar from "@/components/TabBar.vue";
 // const recordList = recordListModel.fetch();
 // const tagList = tagListModel.fetch();
 @Component({
-  components: { Types, Notes, Tags, NumberPad, TagList },
+  components: { Types, Notes, Tags, NumberPad, TagList, TabBar },
 })
 export default class Money extends Vue {
   // record 初始化数据 默认选中餐饮

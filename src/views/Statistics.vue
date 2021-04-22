@@ -1,21 +1,19 @@
 <template>
   <Layout>
     <header class="header">
-      <!--            <TabBar class-prefix="types" :bars="typeList" :c-bar.sync="type"/>-->
-      <select :value="type" class="type">
-        <option v-for="(t, index) in typeList" :key="index" :value="t.value">
-          {{ t.name }}
-        </option>
-      </select>
-      <!-- <TabBar
+      <TabBar class-prefix="types" :bars="typeList" :c-bar.sync="type" />
+      <TabBar
         class-prefix="interval"
         :bars="intervalList"
         :c-bar.sync="interval"
-      /> -->
+      />
     </header>
+
     <div class="chart">
       <div class="caption">
-        <span>本周</span>
+        <span v-if="interval === 'week'">本周</span>
+        <span v-else-if="interval === 'month'">本月</span>
+        <span v-else>今年</span>
       </div>
       <div class="total">总支出: ¥89.00</div>
       <div class="average">平均值: ¥12.71</div>
@@ -25,61 +23,89 @@
       <div class="caption">
         <span>支出排行榜</span>
       </div>
-      <ul class="tag-list">
-        <li class="tag-item">
+      <ul class="tag-list" v-if="targetRecords.length > 0">
+        <li
+          class="tag-item"
+          v-for="(item, index) in this.groupByTag()"
+          :key="index"
+        >
           <div class="tag-info">
             <div class="icon">
               <Icon name="food" />
             </div>
-            <span>购物</span>
-            <span>84.3%</span>
+            <span>{{ item.tag.value }}</span>
+            <span>{{ item.percentage }}%</span>
           </div>
-          <div>75</div>
-        </li>
-        <li class="tag-item">
-          <div class="tag-info">
-            <div class="icon">
-              <Icon name="food" />
-            </div>
-            <span>购物</span>
-            <span>84.3%</span>
-          </div>
-          <div>75</div>
+          <div>{{ item.amount }}</div>
         </li>
       </ul>
+      <div v-else class="reverse">
+        <Blank />
+      </div>
     </div>
   </Layout>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component, Watch } from "vue-property-decorator";
 import Layout from "@/components/Layout.vue";
 import echarts from "echarts";
 // import TabBar from "@/components/TabBar.vue";
 import Icon from "@/components/Icon.vue";
+import TabBar from "@/components/TabBar.vue";
+import dayjs from "dayjs";
+import clone from "@/lib/clone";
+import { twoDecimalPlaces } from "@/lib/twoDecimalPlaces";
+import Blank from "@/components/Blank.vue";
+type Group = {
+  tag: TagItem;
+  amount: number;
+  percentage: number;
+};
 @Component({
-  components: { Icon, Layout },
+  components: { Icon, Layout, TabBar, Blank },
 })
 export default class Charts extends Vue {
-  // typeList: TabBarItem[] = [
-  //   { name: "支出", value: "-" },
-  //   { name: "收入", value: "+" },
-  // ];
-  // intervalList: TabBarItem[] = [
-  //   { name: "周", value: "week" },
-  //   { name: "月", value: "month" },
-  //   { name: "年", value: "year" },
-  // ];
-  type = "-";
-  interval = "week";
+  typeList: TabBarItem[] = [
+    { name: "支出", value: "-" },
+    // { name: "收入", value: "+" },
+  ];
+  intervalList: TabBarItem[] = [
+    { name: "周", value: "week" },
+    { name: "月", value: "month" },
+    { name: "年", value: "year" },
+  ];
+  type: "+" | "-" = "-";
+  interval: "week" | "month" | "year" = "week";
   mounted() {
     this.$store;
     const $figure = document.getElementById("figure");
     const figure = echarts.init($figure as HTMLDivElement);
+    this.draw(this.groupByInterval());
+  }
+  get targetRecords(): RecordItem[] {
+    const now = dayjs();
+    return clone<RecordItem[]>(this.$store.state.recordList)
+      .filter((item) => item.type === this.type)
+      .filter((item) => dayjs(item.createdAt).isSame(now, this.interval));
+  }
+
+  draw(data: Map<string, number>) {
+    // 提取变量
+    const x = [...data.keys()];
+    const y = [...data.values()];
+    const figure = echarts.init(
+      document.getElementById("figure") as HTMLDivElement
+    );
     figure.setOption({
+      grid: {
+        top: "5%",
+        bottom: "10%",
+      },
+
       xAxis: {
-        data: ["02-24", "02-25", "02-26", "02-27", "02-28", "02-29", "03-01"],
+        data: x,
         axisTick: {
           interval: 0,
           lineStyle: {
@@ -88,7 +114,7 @@ export default class Charts extends Vue {
         },
         axisLabel: {
           interval: 0,
-          fontSize: 10,
+          fontSize: 8,
           color: "#999999",
         },
       },
@@ -109,14 +135,14 @@ export default class Charts extends Vue {
       },
       series: [
         {
-          name: "支出",
+          // name: "支出",
           type: "line",
-          data: this.array,
+          data: y,
         },
         {
           name: "平均线",
           type: "line",
-          data: this.average,
+          data: this.toArray(this.average, x.length),
           symbol: "none",
           lineStyle: {
             type: "dashed",
@@ -128,21 +154,171 @@ export default class Charts extends Vue {
       ],
     });
   }
+  toArray(value: number, length: number): number[] {
+    const result: number[] = [];
+    for (let i = 0; i < length; i++) {
+      result.push(value);
+    }
+    return result;
+  }
+
   get array(): number[] {
     return [0, 0, 100, 0, 0, 200, 0];
   }
-  get average(): number[] {
-    let aver = 0;
+  get total() {
+    const amounts = [...this.groupByInterval().values()];
+    let sum = 0;
+    for (let i = 0; i < amounts.length; i++) {
+      sum += amounts[i];
+    }
+    return sum;
+  }
+
+  get average() {
+    const now = dayjs();
+    switch (this.interval) {
+      case "week":
+        return twoDecimalPlaces(this.total / (now.day() + 1));
+      case "month":
+        return twoDecimalPlaces(this.total / now.date());
+      case "year":
+        return twoDecimalPlaces(this.total / (now.month() + 1));
+      default:
+        return 0;
+    }
+  }
+  // get average(): number[] {
+  //   let aver = 0;
+  //   let i: number;
+  //   const averList: number[] = [];
+  //   for (i = 0; i < this.array.length; i++) {
+  //     aver += this.array[i];
+  //   }
+  //   aver = aver / this.array.length;
+  //   for (i = 0; i < this.array.length; i++) {
+  //     averList.push(aver);
+  //   }
+  //   return averList;
+  // }
+  groupByInterval(): Map<string, number> {
+    let result = new Map<string, number>();
+    switch (this.interval) {
+      case "week":
+        result = this.groupByWeek(this.targetRecords);
+        break;
+      case "month":
+        result = this.groupByMonth(this.targetRecords);
+        break;
+      case "year":
+        result = this.groupByYear(this.targetRecords);
+        break;
+    }
+    return result;
+  }
+  groupByWeek(records: RecordItem[]): Map<string, number> {
+    const keys = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
+    const result = new Map<string, number>();
     let i: number;
-    const averList: number[] = [];
-    for (i = 0; i < this.array.length; i++) {
-      aver += this.array[i];
+    // 初始化
+    for (i = 0; i < keys.length; i++) {
+      result.set(keys[i], 0);
     }
-    aver = aver / this.array.length;
-    for (i = 0; i < this.array.length; i++) {
-      averList.push(aver);
+    let r: RecordItem;
+    for (r of records) {
+      const key = keys[dayjs(r.createdAt).day()];
+      const amount = result.get(key) as number;
+      result.set(key, amount + r.amount);
     }
-    return averList;
+    return result;
+  }
+  get days() {
+    const [year, month] = [dayjs().year(), dayjs().month()];
+    const d = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    if (
+      (year % 4 === 0 && year % 100 !== 0) ||
+      (year % 100 === 0 && year % 400 === 0)
+    ) {
+      if (month === 1) {
+        return 29;
+      } else {
+        return d[month];
+      }
+    } else {
+      return d[month];
+    }
+  }
+  groupByMonth(records: RecordItem[]): Map<string, number> {
+    const keys: string[] = [];
+    const result = new Map<string, number>();
+    let i: number;
+    // 初始化
+    for (i = 1; i < this.days; i++) {
+      keys.push(i.toString());
+    }
+    for (i = 0; i < keys.length; i++) {
+      result.set(keys[i], 0);
+    }
+    let r: RecordItem;
+    for (r of records) {
+      const key = dayjs(r.createdAt).date().toString();
+      const amount = result.get(key) as number;
+      result.set(key, amount + r.amount);
+    }
+    return result;
+  }
+  groupByYear(records: RecordItem[]): Map<string, number> {
+    const keys = [
+      "一月",
+      "二月",
+      "三月",
+      "四月",
+      "五月",
+      "六月",
+      "七月",
+      "八月",
+      "九月",
+      "十月",
+      "十一月",
+      "十二月",
+    ];
+    const result = new Map<string, number>();
+    let i: number;
+    // 初始化
+    for (i = 0; i < keys.length; i++) {
+      result.set(keys[i], 0);
+    }
+    let r: RecordItem;
+    for (r of records) {
+      const key = keys[dayjs(r.createdAt).month()];
+      const amount = result.get(key) as number;
+      result.set(key, amount + r.amount);
+    }
+    return result;
+  }
+  groupByTag(): Group[] {
+    const tags: string[] = [];
+    let result: Group[] = [];
+    let r: RecordItem;
+    for (r of this.targetRecords) {
+      const index = tags.indexOf(r.tags.name);
+      if (index < 0) {
+        tags.push(r.tags.name);
+        result.push({ tag: r.tags, amount: r.amount, percentage: 0 });
+      } else {
+        result[index].amount += r.amount;
+      }
+    }
+    for (let i = 0; i < result.length; i++) {
+      result[i].percentage = twoDecimalPlaces(
+        (result[i].amount * 100) / this.total
+      );
+    }
+    result = result.sort((b, a) => a.percentage - b.percentage);
+    return result;
+  }
+  @Watch("interval")
+  onIntervalChange() {
+    this.draw(this.groupByInterval());
   }
 }
 </script>
