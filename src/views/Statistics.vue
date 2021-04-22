@@ -1,7 +1,8 @@
 <template>
   <Layout>
     <header class="header">
-      <TabBar class-prefix="types" :bars="typeList" :c-bar.sync="type" />
+      <!-- <TabBar class-prefix="types" :bars="typeList" :c-bar.sync="type" /> -->
+      <h3>支出</h3>
       <TabBar
         class-prefix="interval"
         :bars="intervalList"
@@ -15,8 +16,8 @@
         <span v-else-if="interval === 'month'">本月</span>
         <span v-else>今年</span>
       </div>
-      <div class="total">总支出: ¥89.00</div>
-      <div class="average">平均值: ¥12.71</div>
+      <div class="total">总支出: ¥{{ total }}</div>
+      <div class="average">平均值: ¥{{ average }}</div>
       <div id="figure"></div>
     </div>
     <div class="ranking">

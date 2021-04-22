@@ -1,6 +1,5 @@
 <template>
   <layout>
-    {{ record }}
     <!-- <Tags :data-source.sync="tags" @update:value="onUpdateTags" /> -->
     <!-- <Types :value.sync="record.type" /> -->
     <TabBar
@@ -23,7 +22,7 @@
       v-else-if="record.type === '+'"
       class-prefix="money"
       :selected-tag.sync="record.tags"
-      :tag-list.sync="defaultIncomeTags"
+      :tag-list.sync="incomeTags"
       class="tag-list"
     />
     <Notes
@@ -60,6 +59,8 @@ import TabBar from "@/components/TabBar.vue";
 export default class Money extends Vue {
   // record 初始化数据 默认选中餐饮
   record: RecordItem = this.initRecord();
+  // 收入tags数据
+  incomeTags = defaultIncomeTags;
   // store获取标签列表
   get tagList(): TagItem {
     console.log(this.$store.state.tagList);
@@ -93,15 +94,15 @@ export default class Money extends Vue {
     this.$store.commit("insertRecord", clone<RecordItem>(this.record));
     this.record = this.initRecord();
     this.$router.replace("/bill");
-    // const record2 = recordListModel.clone(this.record);
-    // record2.createdAt = new Date(); // 加入时间
-    // this.recordList.push(record2);
   }
-  // 监听 当变化时 存入localS
-  @Watch("record")
-  onRecordListChange() {
-    this.saveRecord();
-    // recordListModel.save(this.recordList);
+  //   监听type 支出还是收入对应的 默认选中状态不一样
+  @Watch("record.type")
+  onTypeChange(type: string) {
+    if (type === "+") {
+      this.record.tags = { name: "wages", value: "工资" };
+    } else if (type === "-") {
+      this.record.tags = { name: "food", value: "餐饮" };
+    }
   }
 }
 </script>

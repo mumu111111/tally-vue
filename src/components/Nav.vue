@@ -1,24 +1,53 @@
 <template>
-  <div>
-    <hr />
-    <div>
-      <router-link to="/bill">明细</router-link>
-      |
-      <router-link to="/money">记账</router-link>
-      |
-      <router-link to="/labels">标签</router-link>
-      |
-      <router-link to="/statistics">统计</router-link>
-    </div>
-  </div>
+  <nav>
+    <router-link to="/bill" class="nav-item" active-class="selected">
+      <Icon name="bill" class="icon" />
+      <span>明细</span>
+    </router-link>
+    <router-link to="/money" class="nav-item" active-class="selected">
+      <Icon name="money" class="icon" />
+      <span>记账</span>
+    </router-link>
+    <router-link to="/statistics" class="nav-item" active-class="selected">
+      <Icon name="chart" class="icon" />
+      <span>图表</span>
+    </router-link>
+  </nav>
 </template>
 
 <script lang="ts">
-export default {
-  name: "Nav",
-};
+import Vue from "vue";
+import { Component } from "vue-property-decorator";
+import Icon from "@/components/Icon.vue";
+@Component({
+  components: { Icon },
+})
+export default class Nav extends Vue {}
 </script>
-
 <style lang="scss" scoped>
-@import "~@/assets/style/helper.scss";
+nav {
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 24px;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background: white;
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .icon {
+      width: 24px;
+      height: 24px;
+    }
+    &.selected {
+      color: #ffda47;
+    }
+  }
+}
 </style>
