@@ -1,7 +1,7 @@
 <template>
   <nav>
     <router-link to="/bill" class="nav-item" active-class="selected">
-      <Icon name="icon-jiekuanmingxi" class="icon" />
+      <Icon name="bill" class="icon" />
       <span>明细</span>
     </router-link>
     <router-link to="/money" class="nav-item" active-class="selected">
@@ -19,6 +19,7 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import Icon from "@/components/Icon.vue";
+require("@/assets/icons/bill.svg");
 @Component({
   components: { Icon },
 })
@@ -47,6 +48,11 @@ nav {
     }
     &.selected {
       color: #127d24;
+      > svg {
+        color: #127d24;
+
+        /* color: #F9DC56; */
+      }
     }
   }
 }
