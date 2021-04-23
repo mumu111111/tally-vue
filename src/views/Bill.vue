@@ -2,7 +2,7 @@
   <Layout>
     <header class="header">
       <div class="logo">
-        <img :src="logo" alt="可乐记账" />
+        <h3>可乐记账</h3>
       </div>
       <div class="info">
         <div class="time">
@@ -38,7 +38,7 @@
         </div>
       </div>
     </header>
-    <ul class="record">
+    <ul class="record" v-if="(totalIncome > 0) | (totalExpense > 0)">
       <li v-for="(group, index) in list" :key="index">
         <div class="title">
           <span>{{ getTitle(group) }}</span>
@@ -56,6 +56,7 @@
         </ul>
       </li>
     </ul>
+    <div v-else class="reverse"><Blank /></div>
   </Layout>
 </template>
 
@@ -63,10 +64,10 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import Layout from "@/components/Layout.vue";
-// import logo from '@/assets/logo.png';
 import Icon from "@/components/Icon.vue";
 import dayjs from "dayjs";
 import clone from "@/lib/clone";
+import Blank from "@/components/Blank.vue";
 
 type Group = {
   name: string;
@@ -74,7 +75,7 @@ type Group = {
 };
 
 @Component({
-  components: { Icon, Layout },
+  components: { Icon, Layout, Blank },
 })
 export default class Bill extends Vue {
   // logo: string = logo;
@@ -343,5 +344,8 @@ export default class Bill extends Vue {
       }
     }
   }
+}
+.reverse {
+  margin-top: 20vh;
 }
 </style>

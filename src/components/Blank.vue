@@ -24,11 +24,13 @@ export default class Blank extends Vue {}
   justify-content: center;
   align-items: center;
   .icon {
-    width: 100px;
-    height: 100px;
+    width: 60px;
+    height: 60px;
+    margin-bottom: 20px;
+
     svg {
-      width: 80px;
-      height: 80px;
+      width: 60px;
+      height: 60px;
     }
   }
   span {

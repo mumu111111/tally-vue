@@ -40,7 +40,7 @@
           <div>{{ item.amount }}</div>
         </li>
       </ul>
-      <div v-else class="reverse"><Blank />h</div>
+      <div v-else class="reverse"><Blank /></div>
     </div>
   </Layout>
 </template>
@@ -50,7 +50,6 @@ import Vue from "vue";
 import { Component, Watch } from "vue-property-decorator";
 import Layout from "@/components/Layout.vue";
 import echarts from "echarts";
-// import TabBar from "@/components/TabBar.vue";
 import Icon from "@/components/Icon.vue";
 import TabBar from "@/components/TabBar.vue";
 import dayjs from "dayjs";
@@ -425,5 +424,8 @@ export default class Charts extends Vue {
       }
     }
   }
+}
+.reverse {
+  margin-top: 6vh;
 }
 </style>
