@@ -9,7 +9,7 @@
         :c-bar.sync="record.type"
         class="top-bars"
       />
-      <button class="cancel" @click="cancel">取消</button>
+      <button class="cancel" @click="cancel()">取消</button>
       <TagList
         v-if="record.type == '-'"
         class-prefix="money"
@@ -79,7 +79,7 @@ export default class Money extends Vue {
     };
   }
   cancel() {
-    this.$router.back();
+    this.$router.replace("/bill");
   }
   onUpdateAmount(value: string) {
     this.record.amount = parseFloat(value);

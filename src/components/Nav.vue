@@ -1,7 +1,7 @@
 <template>
   <nav>
     <router-link to="/bill" class="nav-item" active-class="selected">
-      <Icon name="bill" class="icon" />
+      <Icon name="icon-jiekuanmingxi" class="icon" />
       <span>明细</span>
     </router-link>
     <router-link to="/money" class="nav-item" active-class="selected">
