@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop, Watch } from "vue-property-decorator";
 
 @Component
 export default class NumberPad extends Vue {
@@ -30,6 +30,7 @@ export default class NumberPad extends Vue {
   output = "0";
 
   inputContent(event: MouseEvent) {
+    console.log("dddddddddddddd");
     const Button = event.target as HTMLButtonElement;
     const input = Button.textContent!;
     if (Button === null) return; // 加判断这句 否则报错
@@ -38,6 +39,8 @@ export default class NumberPad extends Vue {
     }
     if (this.output === "0") {
       if ("0123456789".indexOf(input) >= 0) {
+        console.log("input", input);
+
         this.output = input;
       } else {
         this.output += input;
@@ -48,9 +51,12 @@ export default class NumberPad extends Vue {
       return;
     }
     this.output += input;
+  }
+  // 监听变化
+  @Watch("output")
+  onOutputChange(output: string) {
     this.$emit("update:value", this.output);
   }
-
   remove() {
     if (this.output.length === 1) {
       this.output = "0";
