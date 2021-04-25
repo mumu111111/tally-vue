@@ -7,7 +7,7 @@
       <span>{{ tag.value }}</span>
     </li>
     <li v-if="disabled">
-      <div class="icon" @click="add"><!-- <Icon name="add"/> -->添加</div>
+      <div class="icon" @click="add"><Icon name="add" /></div>
       <span>添加</span>
     </li>
   </ul>

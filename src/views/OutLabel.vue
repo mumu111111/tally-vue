@@ -70,7 +70,6 @@
         />
       </div>
     </div>
-    {{ houseTags }}
   </div>
 </template>
 
@@ -206,8 +205,8 @@ export default class OutLabel extends Vue {
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      color: #f7d680;
-      border: 1px solid #f7d680;
+      color: #127d24;
+      border: 1px solid #127d24;
       display: flex;
       justify-content: center;
       align-items: center;
