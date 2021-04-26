@@ -1,6 +1,6 @@
 <template>
   <div class="numberPad">
-    <div class="output">{{ value }}</div>
+    <div class="output">{{ output }}</div>
     <div class="buttons">
       <button @click="inputContent">1</button>
       <button @click="inputContent">2</button>
@@ -26,14 +26,12 @@ import { Component, Prop, Watch } from "vue-property-decorator";
 
 @Component
 export default class NumberPad extends Vue {
-  @Prop() value!: string;
-  output = "0";
-
+  @Prop(Number) value!: number;
+  output = this.value.toString();
   inputContent(event: MouseEvent) {
-    const Button = event.target as HTMLButtonElement;
-    const input = Button.textContent!;
-    if (Button === null) return; // 加判断这句 否则报错
-    if (this.output.length === 6) {
+    const button = event.target as HTMLButtonElement;
+    const input = button.textContent!;
+    if (this.output.length === 16) {
       return;
     }
     if (this.output === "0") {
@@ -49,11 +47,32 @@ export default class NumberPad extends Vue {
     }
     this.output += input;
   }
+  // inputContent(event: MouseEvent) {
+  //   const Button = event.target as HTMLButtonElement;
+  //   const input = Button.textContent!;
+  //   if (Button === null) return; // 加判断这句 否则报错
+  //   if (this.output.length === 8) {
+  //     return;
+  //   }
+  //   if (this.output === "0") {
+  //     if ("0123456789".indexOf(input) >= 0) {
+  //       this.output = input;
+  //     } else {
+  //       this.output += input;
+  //     }
+  //     return;
+  //   }
+  //   if (this.output.indexOf(".") >= 0 && input === ".") {
+  //     return;
+  //   }
+  //   this.output += input;
+  //   this.$emit("update:value", this.output);
+  // }
   // 监听变化
-  @Watch("output")
-  onOutputChange(output: string) {
-    this.$emit("update:value", this.output);
-  }
+  // @Watch("output")
+  // onOutputChange(output: string) {
+  //   this.$emit("update:value", this.output);
+  // }
   remove() {
     if (this.output.length === 1) {
       this.output = "0";

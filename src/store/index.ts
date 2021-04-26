@@ -12,13 +12,10 @@ const store = new Vuex.Store({
   },
   mutations: {
     insertRecord(state, record: RecordItem) {
+      // 时间差问题
       const d = new Date()
       d.setHours(d.getHours() + 8)
-      console.dir(d)
-
-      // record.createdAt = new Date();
       record.createdAt = d;
-
       state.recordList.push(record);
       store.commit('saveRecord');
     },
