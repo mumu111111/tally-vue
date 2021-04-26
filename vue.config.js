@@ -2,7 +2,7 @@ const path = require('path')
 
 module.exports = {
     publicPath: process.env.NODE_ENV === 'production'
-        ? '/money/'
+        ? '/tally-vue-website/'
         : '/',
     chainWebpack: config => {
         const icons = path.resolve(__dirname, 'src', 'assets', 'icons')
