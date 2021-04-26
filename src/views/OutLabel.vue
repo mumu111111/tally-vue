@@ -112,12 +112,11 @@ export default class OutLabel extends Vue {
     }
   }
 
-  @Watch("tag", { deep: true })
-  onTagChange(val: TagItem) {
-    // console.log("监听内部变化");
-    console.log(val.name);
-    console.log(val.value);
-  }
+  // @Watch("tag", { deep: true })
+  // onTagChange(val: TagItem) {
+  //   console.log(val.name);
+  //   console.log(val.value);
+  // }
 }
 </script>
 

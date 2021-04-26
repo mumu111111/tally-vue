@@ -30,7 +30,6 @@ export default class NumberPad extends Vue {
   output = "0";
 
   inputContent(event: MouseEvent) {
-    console.log("dddddddddddddd");
     const Button = event.target as HTMLButtonElement;
     const input = Button.textContent!;
     if (Button === null) return; // 加判断这句 否则报错
@@ -39,8 +38,6 @@ export default class NumberPad extends Vue {
     }
     if (this.output === "0") {
       if ("0123456789".indexOf(input) >= 0) {
-        console.log("input", input);
-
         this.output = input;
       } else {
         this.output += input;
@@ -72,7 +69,10 @@ export default class NumberPad extends Vue {
   }
 
   ok() {
-    console.log("3333333333332");
+    if (this.output == "0") {
+      alert("别忘了加入金额哦");
+      return;
+    }
     this.$emit("update:value", this.output);
     this.$emit("submit", this.output);
     this.output = "0"; //清空之前 保存 的数据

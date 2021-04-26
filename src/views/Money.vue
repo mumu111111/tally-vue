@@ -65,8 +65,6 @@ export default class Money extends Vue {
   incomeTags = defaultIncomeTags;
   // store获取标签列表
   get tagList(): TagItem {
-    console.log(this.$store.state.tagList);
-
     return this.$store.state.tagList;
   }
   initRecord(): RecordItem {

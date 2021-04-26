@@ -133,7 +133,6 @@ export default class Bill extends Vue {
         results[index].items.push(record);
       }
     }
-    console.log("list", results);
     return results;
   }
   // 显示时间 eg昨天 星期
