@@ -219,6 +219,7 @@ export default class OutLabel extends Vue {
 }
 .content {
   padding-top: 120px;
+  width: 100%;
 }
 .kind-name {
   text-align: center;
